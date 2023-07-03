@@ -1,0 +1,38 @@
+---
+- name: Install MySQL
+  hosts: test
+  become: true
+  vars:
+    mysql_root_password: "my_secret"
+  tasks:
+    - name: Download MySQL APT Config
+      shell: wget https://repo.mysql.com//mysql-apt-config_0.8.25-1_all.deb -O /tmp/mysql-apt-config_0.8.22-1_all.deb
+
+    - name: Install MySQL APT Config
+      apt:
+        deb: /tmp/mysql-apt-config_0.8.22-1_all.deb
+        update_cache: yes
+      tags: [mysql-config]
+
+    - name: Update Cache
+      apt: update_cache=yes state=latest
+      become: true
+      tags: [apt-cache]
+
+    - name: Install MySQL Server
+      apt:
+        name: mysql-server
+        state: latest
+      tags: [mysql-server]
+
+    - name: Start MySQL Server
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+      tags: [mysql-server]
+
+    - name: Clean
+      file: path=/tmp/mysql-apt-config_0.8.22-1_all.deb state=absent
+
+

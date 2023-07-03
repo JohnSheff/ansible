@@ -1,0 +1,65 @@
+---
+- name: Install Docker
+  hosts: test
+  become: true
+  tasks:
+    - name: Update Cache
+      apt: update_cache=yes state=latest
+      become: true
+
+    - name: Install packages for Docker
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg2
+          - software-properties-common
+        state: present
+      become: true
+      tags: [packages]
+
+    - name: Add GPG key for Docker
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        validate_certs: yes
+        state: present
+      become: true
+      tags: [docker-repo-key]
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+      become: true
+      tags: [docker-repo]
+
+    - name: Install Docker
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: yes
+      become: true
+      tags: [docker-install]
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: yes
+        state: present
+      become: true
+      tags: [docker-user]
+
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+      become: true
+      tags: [docker-start]
