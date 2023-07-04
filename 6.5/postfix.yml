@@ -1,0 +1,27 @@
+---
+- name: Install/Remove Postfix mail server
+  hosts: test
+  become: true
+
+  tasks:
+  - name: Install Postfix
+    package:
+      name: postfix
+      state: present
+    tags:
+      - init
+
+  - name: Ensure Postfix is running
+    service:
+      name: postfix
+      state: started
+      enabled: yes
+    tags:
+      - init
+
+  - name: Remove Postfix
+    package:
+      name: postfix
+      state: absent
+    tags:
+      - drop
