@@ -1,0 +1,24 @@
+---
+- name: Установка vsftpd
+  package:
+    name:
+      - vsftpd
+    state: latest
+
+- name: Копирование настроек vsftpd
+  template:
+    src: vsftpd.conf.j2
+    dest: /etc/vsftpd.conf
+
+- name: Создание директории пассивного режима
+  file:
+    path: /var/ftp/data
+    state: directory
+    owner: ftp
+    group: ftp
+    mode: '0755'
+
+- name: Перезагрузка vsftpd
+  service:
+    name: vsftpd
+    state: restarted

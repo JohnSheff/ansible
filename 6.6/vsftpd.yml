@@ -1,0 +1,7 @@
+--- 
+- name: Vsftpd
+  hosts: test2
+  become: true
+
+  roles:
+  - vsftpd-install
