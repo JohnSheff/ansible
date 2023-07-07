@@ -1,0 +1,32 @@
+- name: Install Nginx and PHP-FPM
+  apt:
+    name:
+    - nginx
+    - nginx-extras
+    - php-fpm
+    state: present
+
+- name: Create nginx ansible directory
+  file:
+    path: /opt/nginx/ansible
+    state: directory
+  become: true
+
+- name: Create Nginx config file
+  template:
+      src: nginx.conf.j2
+      dest: /etc/nginx/sites-available/default
+  notify: Reload Nginx configuration
+
+- name: Create index.php file
+  copy:
+      content: "<?php phpinfo();?>"
+      dest: /opt/nginx/ansible/index.php
+  become: true
+
+- name: Reload Nginx configuration
+  become: true
+  service:
+      name: nginx
+      state: reloaded   
+  notify: Restart PHP-FPM
