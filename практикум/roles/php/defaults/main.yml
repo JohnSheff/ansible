@@ -1,0 +1,4 @@
+---
+php_listen_address: 127.0.0.1
+php_listen_port: 9050
+php_max_execution_time: 300

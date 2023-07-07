@@ -1,0 +1,7 @@
+---
+- name: Copy PHP-FPM configuration file
+  template:
+    src: templates/php-fpm.conf.j2
+    dest: /etc/php/7.4/fpm/pool.d/www.conf
+    mode: '0640'
+  notify: restart php-fpm

@@ -1,0 +1,7 @@
+- name: Configure nginx and users
+  hosts: test
+  become: yes
+
+  roles:
+    - users
+    - http

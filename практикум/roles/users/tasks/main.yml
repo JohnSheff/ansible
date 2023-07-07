@@ -1,0 +1,11 @@
+---
+- name: Create user
+  user:
+    name: users
+    createhome: yes
+
+- name: Set authorized key.
+  authorized_key:
+    user: users
+    state: present
+    key: "ssh-rsa" 

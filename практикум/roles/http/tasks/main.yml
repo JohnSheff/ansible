@@ -1,0 +1,12 @@
+---
+- import_tasks: setup-nginx.yml
+- name: Install Nginx
+  apt:
+    name:
+      - nginx
+    state: latest
+- name: Create index file
+  template:
+    src: index.html.j2
+    dest: "{{ nginx_root_path }}/index.html"
+  notify: restart nginx

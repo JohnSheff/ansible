@@ -1,0 +1,7 @@
+- name: Configure php and users
+  hosts: test
+  become: yes
+
+  roles:
+    - users
+    - php

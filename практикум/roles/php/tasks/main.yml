@@ -1,0 +1,23 @@
+---
+- import_tasks: setup-php-fpm.yml
+- name: Install PHP and required modules
+  apt:
+    name:
+      - php7.4-fpm
+      - php7.4-cli
+      - php7.4-mysql
+      - php7.4-curl
+      - php7.4-gd
+      - php7.4-intl
+      - php7.4-mbstring
+      - php7.4-soap
+      - php7.4-xml
+      - php7.4-zip
+    state: present
+- name: Change PHP-FPM listen configuration
+  ini_file:
+    dest: /etc/php/7.4/fpm/pool.d/www.conf
+    section: www
+    option: listen
+    value: "{{ php_listen_address }}:{{ php_listen_port }}"
+  notify: restart php-fpm

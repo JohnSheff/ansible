@@ -1,0 +1,17 @@
+server {
+    listen {{ nginx_listen_port }};
+    server_name {{ nginx_server_name }};
+    root {{ nginx_root_path }};
+
+    index {{ nginx_index_file }};
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+}

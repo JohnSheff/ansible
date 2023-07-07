@@ -1,0 +1,19 @@
+---
+- name: Remove the default nginx configuration file
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: restart nginx
+
+- name: Create Nginx site configuration file
+  template:
+    src: templates/site.conf.j2
+    dest: /etc/nginx/sites-available/{{ nginx_server_name }}
+  notify: restart nginx
+
+- name: Create a symlink for the Nginx configuration file
+  file:
+    src: /etc/nginx/sites-available/{{ nginx_server_name }}
+    dest: "/etc/nginx/sites-enabled/{{ nginx_server_name }}"
+    state: link
+  notify: restart nginx

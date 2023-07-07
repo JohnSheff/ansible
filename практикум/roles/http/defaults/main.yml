@@ -1,0 +1,5 @@
+---
+nginx_listen_port: 80
+nginx_server_name: example.com
+nginx_root_path: /var/www/html
+nginx_index_file: index.html index.htm index.php
