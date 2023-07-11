@@ -1,0 +1,67 @@
+- name: Install and start Docker
+  hosts: app
+  become: yes
+ 
+  tasks:
+    - name: Install utils
+      when: ansible_os_family == 'Ubuntu'
+      apt:
+        name:
+          - apt-utils
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+        state: latest
+ 
+    - name: Add Docker GPG key
+      when: ansible_os_family == 'Ubuntu'
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+ 
+    - name: Add Docker repo
+      when: ansible_os_family == 'Ubuntu'
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+ 
+    - name: Install Docker
+      when: ansible_os_family == 'Ubuntu'
+      apt:
+        name: docker-ce
+        state: latest
+ 
+    - name: Install utils
+      when: ansible_os_family == 'RedHat'
+      yum:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: latest
+ 
+    - name: Add Docker repo
+      when: ansible_os_family == 'RedHat'
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+ 
+    - name: Install Docker
+      when: ansible_os_family == 'RedHat'
+      yum:
+        name: docker-ce
+        state: latest
+ 
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+ 
+    - name: Add user to docker group
+      user:
+        name: user
+        groups: docker
+        append: yes

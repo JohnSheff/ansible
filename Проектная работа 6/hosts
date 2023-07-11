@@ -1,0 +1,9 @@
+[app]
+vm2 ansible_host=192.168.99.180
+vm3 ansible_host=192.168.99.185
+
+[database]
+vm1 ansible_host=192.168.99.186 postgres_version=13 data_dir=/etc/postgresql/13/main 
+
+[web]
+vm1
